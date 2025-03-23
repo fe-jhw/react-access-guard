@@ -1,6 +1,6 @@
 {
   "name": "react-access-guard",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "`react-access-guard` is a library for managing user access permissions in React applications.",
   "type": "module",
   "license": "MIT",
