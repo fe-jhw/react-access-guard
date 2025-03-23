@@ -1,12 +1,25 @@
 {
   "name": "react-access-guard",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "`react-access-guard` is a library for managing user access permissions in React applications.",
   "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "access-guard",
+    "permission",
+    "access",
+    "role",
+    "react"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fe-jhw/react-access-guard.git"
+  },
   "files": [
     "dist"
   ],
   "main": "./dist/react-access-guard.cjs",
+  "types": "./dist/index.d.ts",
   "module": "./dist/react-access-guard.js",
   "exports": {
     ".": {
