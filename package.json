@@ -23,6 +23,7 @@
   "module": "./dist/react-access-guard.js",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/react-access-guard.js",
       "require": "./dist/react-access-guard.cjs"
     }
