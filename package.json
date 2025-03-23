@@ -1,0 +1,57 @@
+{
+  "name": "react-access-guard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/react-access-guard.cjs",
+  "module": "./dist/react-access-guard.js",
+  "exports": {
+    ".": {
+      "import": "./dist/react-access-guard.js",
+      "require": "./dist/react-access-guard.cjs"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "vitest"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.2.0",
+    "@testing-library/user-event": "14.6.1",
+    "@types/node": "22.13.11",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/ui": "3.0.9",
+    "eslint": "^9.21.0",
+    "eslint-plugin-jest-dom": "5.5.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "eslint-plugin-testing-library": "7.1.1",
+    "eslint-plugin-vitest": "0.5.4",
+    "globals": "^15.15.0",
+    "jsdom": "26.0.0",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.24.1",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "4.5.3",
+    "vite-tsconfig-paths": "5.1.4",
+    "vitest": "3.0.9"
+  }
+}
