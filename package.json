@@ -5,7 +5,7 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "`react-access-guard` is a library for managing user access permissions in React applications.",
   "type": "module",
   "license": "MIT",
