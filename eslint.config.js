@@ -5,7 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import reactTestingLibrary from 'eslint-plugin-testing-library'
 import vitest from 'eslint-plugin-vitest'
-import jestDom from 'eslint-plugin-jestDom'
+import jestDom from 'eslint-plugin-jest-dom'
 
 export default tseslint.config(
   { ignores: ['dist'] },
