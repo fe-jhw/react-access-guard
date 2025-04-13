@@ -3,13 +3,29 @@ import { AccessMap } from "./types";
 import { AccessContext } from "./access-context";
 
 /**
- * Context Provider that enables the use of AccessGuard.
+ * Context Provider that enables access control in the application.
  *
- * @param {Object} props - The component props.
- * @param {ReactNode} props.children - The child components to be rendered within the provider.
- * @param {AccessMap} props.accessMap - A hash map containing access information.
+ * @param props - Component properties
+ * @param props.children - Child components that will have access to the access control system
+ * @param props.accessMap - Map of entity codes to their allowed access rights
  *
- * @returns {JSX.Element} The rendered AccessProvider component.
+ * @example
+ * ```tsx
+ * // Basic usage
+ * const accessMap = {
+ *   users: ['CREATE', 'READ', 'UPDATE'],
+ *   posts: ['READ', 'COMMENT']
+ * };
+ *
+ * function App() {
+ *   return (
+ *     <AccessProvider accessMap={accessMap}>
+ *       <UserManagement />
+ *       <PostList />
+ *     </AccessProvider>
+ *   );
+ * }
+ * ```
  */
 function AccessProvider({
   children,
