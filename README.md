@@ -1,4 +1,4 @@
-# react-access-guard
+# react-access-guard &middot; [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fe-jhw/react-access-guard/blob/main/LICENSE) [![codecov](https://codecov.io/gh/fe-jhw/react-access-guard/graph/badge.svg?token=LW734XEYVM)](https://codecov.io/gh/fe-jhw/react-access-guard) [![NPM badge](https://img.shields.io/npm/v/react-access-guard?logo=npm)](https://www.npmjs.com/package/react-access-guard)
 `react-access-guard` is a library for managing user access permissions in React applications. 
 
 With this library, you can easily control access to specific components and provide fallback components for users without the required permissions.
