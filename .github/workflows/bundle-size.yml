@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
 
     steps:
       - name: Checkout main branch
@@ -42,9 +44,12 @@ jobs:
       - name: Get main branch bundle sizes
         id: main_sizes
         run: |
-          echo "es_size=$(du -sk ./dist/react-access-guard.js | cut -f1)" >> $GITHUB_ENV
-          echo "cjs_size=$(du -sk ./dist/react-access-guard.cjs | cut -f1)" >> $GITHUB_ENV
-          echo "types_size=$(du -sk ./dist/index.d.ts | cut -f1)" >> $GITHUB_ENV
+          es_bytes=$(stat -f %z ./dist/react-access-guard.js)
+          cjs_bytes=$(stat -f %z ./dist/react-access-guard.cjs)
+          types_bytes=$(stat -f %z ./dist/index.d.ts)
+          echo "es_size=$(echo "scale=2; $es_bytes/1024" | bc)" >> $GITHUB_ENV
+          echo "cjs_size=$(echo "scale=2; $cjs_bytes/1024" | bc)" >> $GITHUB_ENV
+          echo "types_size=$(echo "scale=2; $types_bytes/1024" | bc)" >> $GITHUB_ENV
           
       - name: Clean up
         run: rm -Rf node_modules/ dist/
@@ -61,23 +66,26 @@ jobs:
       - name: Get PR branch bundle sizes
         id: pr_sizes
         run: |
-          echo "pr_es_size=$(du -sk ./dist/react-access-guard.js | cut -f1)" >> $GITHUB_ENV
-          echo "pr_cjs_size=$(du -sk ./dist/react-access-guard.cjs | cut -f1)" >> $GITHUB_ENV
-          echo "pr_types_size=$(du -sk ./dist/index.d.ts | cut -f1)" >> $GITHUB_ENV
+          pr_es_bytes=$(stat -f %z ./dist/react-access-guard.js)
+          pr_cjs_bytes=$(stat -f %z ./dist/react-access-guard.cjs)
+          pr_types_bytes=$(stat -f %z ./dist/index.d.ts)
+          echo "pr_es_size=$(echo "scale=2; $pr_es_bytes/1024" | bc)" >> $GITHUB_ENV
+          echo "pr_cjs_size=$(echo "scale=2; $pr_cjs_bytes/1024" | bc)" >> $GITHUB_ENV
+          echo "pr_types_size=$(echo "scale=2; $pr_types_bytes/1024" | bc)" >> $GITHUB_ENV
 
       - name: Compute size differences
         id: size_diffs
         run: |
-          echo "es_diff=$((${{ env.pr_es_size }} - ${{ env.es_size }}))" >> $GITHUB_ENV
-          echo "cjs_diff=$((${{ env.pr_cjs_size }} - ${{ env.cjs_size }}))" >> $GITHUB_ENV
-          echo "types_diff=$((${{ env.pr_types_size }} - ${{ env.types_size }}))" >> $GITHUB_ENV
+          echo "es_diff=$(echo "scale=2; ${{ env.pr_es_size }} - ${{ env.es_size }}" | bc)" >> $GITHUB_ENV
+          echo "cjs_diff=$(echo "scale=2; ${{ env.pr_cjs_size }} - ${{ env.cjs_size }}" | bc)" >> $GITHUB_ENV
+          echo "types_diff=$(echo "scale=2; ${{ env.pr_types_size }} - ${{ env.types_size }}" | bc)" >> $GITHUB_ENV
 
       - name: Get gzip sizes
         run: |
           gzip -9 -c ./dist/react-access-guard.js | wc -c > es.gz
           gzip -9 -c ./dist/react-access-guard.cjs | wc -c > cjs.gz
-          echo "pr_es_gzip=$(cat es.gz)" >> $GITHUB_ENV
-          echo "pr_cjs_gzip=$(cat cjs.gz)" >> $GITHUB_ENV
+          echo "pr_es_gzip=$(echo "scale=2; $(cat es.gz)/1024" | bc)" >> $GITHUB_ENV
+          echo "pr_cjs_gzip=$(echo "scale=2; $(cat cjs.gz)/1024" | bc)" >> $GITHUB_ENV
 
       - name: Comment PR
         uses: mshick/add-pr-comment@v2
@@ -90,13 +98,13 @@ jobs:
             - Main branch: ${{ env.es_size }} KB
             - PR branch: ${{ env.pr_es_size }} KB
             - Difference: ${{ env.es_diff }} KB
-            - Gzipped: ${{ env.pr_es_gzip }} bytes
+            - Gzipped: ${{ env.pr_es_gzip }} KB
             
             ### CommonJS Bundle (react-access-guard.cjs)
             - Main branch: ${{ env.cjs_size }} KB
             - PR branch: ${{ env.pr_cjs_size }} KB
             - Difference: ${{ env.cjs_diff }} KB
-            - Gzipped: ${{ env.pr_cjs_gzip }} bytes
+            - Gzipped: ${{ env.pr_cjs_gzip }} KB
             
             ### TypeScript Definitions
             - Main branch: ${{ env.types_size }} KB
