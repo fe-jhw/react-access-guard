@@ -1,0 +1,105 @@
+name: 'Bundle Size Comparison'
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org/'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: |
+            **/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Build the code
+        run: npm run build
+
+      - name: Get main branch bundle sizes
+        id: main_sizes
+        run: |
+          echo "es_size=$(du -sk ./dist/react-access-guard.js | cut -f1)" >> $GITHUB_ENV
+          echo "cjs_size=$(du -sk ./dist/react-access-guard.cjs | cut -f1)" >> $GITHUB_ENV
+          echo "types_size=$(du -sk ./dist/index.d.ts | cut -f1)" >> $GITHUB_ENV
+          
+      - name: Clean up
+        run: rm -Rf node_modules/ dist/
+
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the code
+        run: npm run build
+
+      - name: Get PR branch bundle sizes
+        id: pr_sizes
+        run: |
+          echo "pr_es_size=$(du -sk ./dist/react-access-guard.js | cut -f1)" >> $GITHUB_ENV
+          echo "pr_cjs_size=$(du -sk ./dist/react-access-guard.cjs | cut -f1)" >> $GITHUB_ENV
+          echo "pr_types_size=$(du -sk ./dist/index.d.ts | cut -f1)" >> $GITHUB_ENV
+
+      - name: Compute size differences
+        id: size_diffs
+        run: |
+          echo "es_diff=$((${{ env.pr_es_size }} - ${{ env.es_size }}))" >> $GITHUB_ENV
+          echo "cjs_diff=$((${{ env.pr_cjs_size }} - ${{ env.cjs_size }}))" >> $GITHUB_ENV
+          echo "types_diff=$((${{ env.pr_types_size }} - ${{ env.types_size }}))" >> $GITHUB_ENV
+
+      - name: Get gzip sizes
+        run: |
+          gzip -9 -c ./dist/react-access-guard.js | wc -c > es.gz
+          gzip -9 -c ./dist/react-access-guard.cjs | wc -c > cjs.gz
+          echo "pr_es_gzip=$(cat es.gz)" >> $GITHUB_ENV
+          echo "pr_cjs_gzip=$(cat cjs.gz)" >> $GITHUB_ENV
+
+      - name: Comment PR
+        uses: mshick/add-pr-comment@v2
+        with:
+          message-id: 'bundle-size-comparison'
+          message: |
+            ## 📦 Bundle Size Report
+            
+            ### ESModule Bundle (react-access-guard.js)
+            - Main branch: ${{ env.es_size }} KB
+            - PR branch: ${{ env.pr_es_size }} KB
+            - Difference: ${{ env.es_diff }} KB
+            - Gzipped: ${{ env.pr_es_gzip }} bytes
+            
+            ### CommonJS Bundle (react-access-guard.cjs)
+            - Main branch: ${{ env.cjs_size }} KB
+            - PR branch: ${{ env.pr_cjs_size }} KB
+            - Difference: ${{ env.cjs_diff }} KB
+            - Gzipped: ${{ env.pr_cjs_gzip }} bytes
+            
+            ### TypeScript Definitions
+            - Main branch: ${{ env.types_size }} KB
+            - PR branch: ${{ env.pr_types_size }} KB
+            - Difference: ${{ env.types_diff }} KB
+          repo-token: '${{ github.token }}'
