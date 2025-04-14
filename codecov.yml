@@ -1,0 +1,17 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 80%    # 전체 커버리지 목표치
+        threshold: 2%   # 허용 변동폭
+    patch:
+      default:
+        target: 80%    # PR에서 변경된 코드의 커버리지 목표치
+        
+  ignore:
+    - "src/App.tsx"       # 개발 서버용 파일 제외
+    - "src/main.tsx"
+    - "src/lib/main.ts"
+
+  paths:
+    - "src/lib"          # 라이브러리 코드만 포함 
