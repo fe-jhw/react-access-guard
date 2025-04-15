@@ -4,6 +4,10 @@ import { AccessContext } from "./access-context";
 
 /**
  * Context Provider that enables access control in the application.
+ * Used in conjunction with AccessGuard to protect components based on user permissions.
+ *
+ * The AccessGuard components within this provider will check permissions using the following rule:
+ * - A user needs ANY of the specified permissions to access the protected component
  *
  * @param props - Component properties
  * @param props.children - Child components that will have access to the access control system

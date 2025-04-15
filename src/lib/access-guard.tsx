@@ -6,6 +6,8 @@ import useAccess from "./use-access";
  * The AccessGuard component checks the user's access permissions and
  * renders a fallback component if the user does not have the required permissions.
  *
+ * By default, the component will render its children if the user has ANY of the specified permissions.
+ *
  * @example
  * ```tsx
  * // Basic usage

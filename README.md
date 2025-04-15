@@ -1,57 +1,57 @@
 # react-access-guard &middot; [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fe-jhw/react-access-guard/blob/main/LICENSE) [![codecov](https://codecov.io/gh/fe-jhw/react-access-guard/graph/badge.svg?token=LW734XEYVM)](https://codecov.io/gh/fe-jhw/react-access-guard) [![NPM badge](https://img.shields.io/npm/v/react-access-guard?logo=npm)](https://www.npmjs.com/package/react-access-guard)
 `react-access-guard` is a library for managing user access permissions in React applications. 
 
-With this library, you can easily control access to specific components and provide fallback components for users without the required permissions.
+With this library, you can easily control access to specific components and provide fallback components for users without the required permissions. The component will render its children if the user has ANY of the specified permissions.
 
 ## Installation
-You can install `react-access-guard` via npm, yarn, pnpm:
+You can install `react-access-guard` via npm, yarn, or pnpm:
 ```bash
 npm install react-access-guard
 ```
 or 
 ```bash
-yarn(or pnpm) add react-access-guard
+yarn add react-access-guard
+```
+or
+```bash
+pnpm add react-access-guard
 ```
 
 ## Usage
-To use the react-access-guard library, you need to wrap your root component or the component where you want to manage access with the AccessProvider. 
-
-This provider will receive an accessMap prop containing the permission information.
+To use the react-access-guard library, you need to wrap your root component with the AccessProvider and provide an accessMap containing the permission information.
 
 ### Step 1: Wrap with AccessProvider
 ```jsx
-import React from 'react';
-import { AccessProvider, AccessMap } from 'react-access-guard';
+import { AccessProvider } from 'react-access-guard';
 
-// Generally, you will fetch permission information from the server and then transform it to match the type of AccessMap for use.
-const accessMap: AccessMap = {
-  myEntity: ['CREATE', 'UPDATE'],
+const accessMap = {
+  users: ['CREATE', 'READ', 'UPDATE'],
+  posts: ['READ', 'COMMENT']
 };
 
 const App = () => {
   return (
     <AccessProvider accessMap={accessMap}>
-      <MyComponent />
+      <YourApp />
     </AccessProvider>
   );
 };
 ```
-### Step 2: Protect Components with AccessGuard
-Next, you can wrap the components that you want to protect with the AccessGuard. 
 
-This component will check the user's permissions and render the appropriate content based on their access level.
+### Step 2: Protect Components with AccessGuard
+Next, you can wrap the components that you want to protect with the AccessGuard. The component will check if the user has any of the specified permissions and render the appropriate content.
+
 ```jsx
-import React from 'react';
 import { AccessGuard } from 'react-access-guard';
 
-const MyComponent = () => {
+const PostList = () => {
   return (
     <AccessGuard
-      entityCode="myEntity"
-      access={['CREATE', 'UPDATE']}
+      entityCode="posts"
+      access={['READ', 'COMMENT']}
       fallback={<div>Access denied.</div>}
     >
-      <div>Content accessible to authorized users.</div>
+      <div>Posts list visible to users with either READ or COMMENT permission.</div>
     </AccessGuard>
   );
 };
