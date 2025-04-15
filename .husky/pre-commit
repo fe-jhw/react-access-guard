@@ -1,0 +1,7 @@
+echo "🔍 Checking your code with lint-staged..."
+npx lint-staged
+
+echo "🧪 Running tests..."
+npm run test
+
+echo "✨ All checks passed!"
