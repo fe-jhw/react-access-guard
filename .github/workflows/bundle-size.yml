@@ -1,4 +1,4 @@
-name: 'Bundle Size Comparison'
+name: PR Bundle Size Analysis & Comparison
 
 on:
   pull_request:
