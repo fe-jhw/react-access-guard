@@ -61,6 +61,7 @@ const PostList = () => {
 If you would like to contribute, please fork this repository and submit a pull request. 
 
 Bug reports and feature requests are also welcome!
+Please see our [Contributing Guidelines](https://github.com/fe-jhw/react-access-guard/blob/main/.github/CONTRIBUTING.md) for more details.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more details.
