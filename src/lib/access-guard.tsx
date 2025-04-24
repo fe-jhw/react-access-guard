@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode } from "react";
 import { Access } from "./types";
 import useAccess from "./use-access";
 
@@ -47,11 +47,8 @@ function AccessGuard({
   fallback?: ReactNode;
 }) {
   const grantedAccess = useAccess({ entityCode });
-
-  const hasRequiredAccess = useMemo(
-    () => grantedAccess?.some((granted) => access.includes(granted)) ?? false,
-    [grantedAccess, access]
-  );
+  const hasRequiredAccess =
+    grantedAccess?.some((granted) => access.includes(granted)) ?? false;
 
   if (!hasRequiredAccess) return <>{fallback ?? null}</>;
   return <>{children}</>;
